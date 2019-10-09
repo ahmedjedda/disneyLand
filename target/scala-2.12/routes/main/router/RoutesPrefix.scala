@@ -1,6 +1,6 @@
 // @GENERATOR:play-routes-compiler
 // @SOURCE:C:/Users/ahmed/Desktop/test/dlp-test/conf/routes
-// @DATE:Tue Oct 08 19:54:18 CEST 2019
+// @DATE:Wed Oct 09 16:53:35 CEST 2019
 
 
 package router {

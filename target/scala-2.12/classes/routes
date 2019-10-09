@@ -11,5 +11,8 @@ GET     /assets/*file               controllers.Assets.versioned(path="/public",
 # Get image route 
 GET /test                       controllers.HomeController.test
 GET /testMultiple               controllers.HomeController.testMultiple
+GET /all/                       controllers.HomeController.allInOnView(showOneImage :Boolean = true)
+GET /all/:showOneImage          controllers.HomeController.allInOnView( showOneImage :Boolean)
+
 
 

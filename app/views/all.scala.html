@@ -1,0 +1,26 @@
+@(source: String , images: List[String] , showOneImage : Boolean )
+  <h1>ALL IN ONE VIEW</h1>
+
+
+@if(!source.isEmpty()) {
+<input type="submit" onclick="location.href='/all/false';" value="Switch" />
+
+
+  <h1>ONE IMAGE </h1>
+  
+  <img #imgID src=@source width="500" height="500">
+  
+  
+} 
+@if(images.size() != 0) {
+<input type="submit" onclick="location.href='/all/true';" value="Switch" />
+
+<h1>MULTIPLE IMAGES</h1>
+
+<ul>
+@for(image <- images) {
+  <img src=@image width="500" height="500">
+}
+</ul> 
+
+}

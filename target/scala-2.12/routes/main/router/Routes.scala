@@ -1,6 +1,6 @@
 // @GENERATOR:play-routes-compiler
 // @SOURCE:C:/Users/ahmed/Desktop/test/dlp-test/conf/routes
-// @DATE:Tue Oct 08 19:54:18 CEST 2019
+// @DATE:Wed Oct 09 16:53:35 CEST 2019
 
 package router
 
@@ -43,6 +43,8 @@ class Routes(
     ("""GET""", this.prefix + (if(this.prefix.endsWith("/")) "" else "/") + """assets/""" + "$" + """file<.+>""", """controllers.Assets.versioned(path:String = "/public", file:Asset)"""),
     ("""GET""", this.prefix + (if(this.prefix.endsWith("/")) "" else "/") + """test""", """controllers.HomeController.test"""),
     ("""GET""", this.prefix + (if(this.prefix.endsWith("/")) "" else "/") + """testMultiple""", """controllers.HomeController.testMultiple"""),
+    ("""GET""", this.prefix + (if(this.prefix.endsWith("/")) "" else "/") + """all/""", """controllers.HomeController.allInOnView(showOneImage:Boolean = true)"""),
+    ("""GET""", this.prefix + (if(this.prefix.endsWith("/")) "" else "/") + """all/""" + "$" + """showOneImage<[^/]+>""", """controllers.HomeController.allInOnView(showOneImage:Boolean)"""),
     Nil
   ).foldLeft(List.empty[(String,String,String)]) { (s,e) => e.asInstanceOf[Any] match {
     case r @ (_,_,_) => s :+ r.asInstanceOf[(String,String,String)]
@@ -122,6 +124,42 @@ class Routes(
     )
   )
 
+  // @LINE:14
+  private[this] lazy val controllers_HomeController_allInOnView4_route = Route("GET",
+    PathPattern(List(StaticPart(this.prefix), StaticPart(this.defaultPrefix), StaticPart("all/")))
+  )
+  private[this] lazy val controllers_HomeController_allInOnView4_invoker = createInvoker(
+    HomeController_0.allInOnView(fakeValue[Boolean]),
+    play.api.routing.HandlerDef(this.getClass.getClassLoader,
+      "router",
+      "controllers.HomeController",
+      "allInOnView",
+      Seq(classOf[Boolean]),
+      "GET",
+      this.prefix + """all/""",
+      """""",
+      Seq()
+    )
+  )
+
+  // @LINE:15
+  private[this] lazy val controllers_HomeController_allInOnView5_route = Route("GET",
+    PathPattern(List(StaticPart(this.prefix), StaticPart(this.defaultPrefix), StaticPart("all/"), DynamicPart("showOneImage", """[^/]+""",true)))
+  )
+  private[this] lazy val controllers_HomeController_allInOnView5_invoker = createInvoker(
+    HomeController_0.allInOnView(fakeValue[Boolean]),
+    play.api.routing.HandlerDef(this.getClass.getClassLoader,
+      "router",
+      "controllers.HomeController",
+      "allInOnView",
+      Seq(classOf[Boolean]),
+      "GET",
+      this.prefix + """all/""" + "$" + """showOneImage<[^/]+>""",
+      """""",
+      Seq()
+    )
+  )
+
 
   def routes: PartialFunction[RequestHeader, Handler] = {
   
@@ -147,6 +185,18 @@ class Routes(
     case controllers_HomeController_testMultiple3_route(params@_) =>
       call { 
         controllers_HomeController_testMultiple3_invoker.call(HomeController_0.testMultiple)
+      }
+  
+    // @LINE:14
+    case controllers_HomeController_allInOnView4_route(params@_) =>
+      call(Param[Boolean]("showOneImage", Right(true))) { (showOneImage) =>
+        controllers_HomeController_allInOnView4_invoker.call(HomeController_0.allInOnView(showOneImage))
+      }
+  
+    // @LINE:15
+    case controllers_HomeController_allInOnView5_route(params@_) =>
+      call(params.fromPath[Boolean]("showOneImage", None)) { (showOneImage) =>
+        controllers_HomeController_allInOnView5_invoker.call(HomeController_0.allInOnView(showOneImage))
       }
   }
 }

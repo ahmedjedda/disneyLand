@@ -1,6 +1,6 @@
 // @GENERATOR:play-routes-compiler
 // @SOURCE:C:/Users/ahmed/Desktop/test/dlp-test/conf/routes
-// @DATE:Tue Oct 08 19:54:18 CEST 2019
+// @DATE:Wed Oct 09 16:53:35 CEST 2019
 
 import play.api.routing.JavaScriptReverseRoute
 
@@ -25,6 +25,24 @@ package controllers.javascript {
       """
         function() {
           return _wA({method:"GET", url:"""" + _prefix + { _defaultPrefix } + """" + "testMultiple"})
+        }
+      """
+    )
+  
+    // @LINE:14
+    def allInOnView: JavaScriptReverseRoute = JavaScriptReverseRoute(
+      "controllers.HomeController.allInOnView",
+      """
+        function(showOneImage0) {
+        
+          if (showOneImage0 == """ + implicitly[play.api.mvc.JavascriptLiteral[Boolean]].to(true) + """) {
+            return _wA({method:"GET", url:"""" + _prefix + { _defaultPrefix } + """" + "all/"})
+          }
+        
+          if (true) {
+            return _wA({method:"GET", url:"""" + _prefix + { _defaultPrefix } + """" + "all/" + encodeURIComponent((""" + implicitly[play.api.mvc.PathBindable[Boolean]].javascriptUnbind + """)("showOneImage", showOneImage0))})
+          }
+        
         }
       """
     )

@@ -1,6 +1,6 @@
 // @GENERATOR:play-routes-compiler
 // @SOURCE:C:/Users/ahmed/Desktop/test/dlp-test/conf/routes
-// @DATE:Tue Oct 08 19:54:18 CEST 2019
+// @DATE:Wed Oct 09 16:53:35 CEST 2019
 
 import play.api.mvc.Call
 
@@ -22,6 +22,25 @@ package controllers {
     def testMultiple(): Call = {
       
       Call("GET", _prefix + { _defaultPrefix } + "testMultiple")
+    }
+  
+    // @LINE:14
+    def allInOnView(showOneImage:Boolean): Call = {
+    
+      (showOneImage: @unchecked) match {
+      
+        // @LINE:14
+        case (showOneImage) if showOneImage == true =>
+          implicit lazy val _rrc = new play.core.routing.ReverseRouteContext(Map(("showOneImage", true))); _rrc
+          Call("GET", _prefix + { _defaultPrefix } + "all/")
+      
+        // @LINE:15
+        case (showOneImage)  =>
+          
+          Call("GET", _prefix + { _defaultPrefix } + "all/" + play.core.routing.dynamicString(implicitly[play.api.mvc.PathBindable[Boolean]].unbind("showOneImage", showOneImage)))
+      
+      }
+    
     }
   
     // @LINE:6

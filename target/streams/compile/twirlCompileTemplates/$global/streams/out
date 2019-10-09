@@ -1,2 +1,2 @@
-[0m[[0m[31merror[0m] [0m[0m[Error] C:\Users\ahmed\Desktop\test\dlp-test\app\views\image.scala.html:18[0m
-[0m[[0m[31merror[0m] [0m[0m}: Not parsed?[0m
+[0m[[0m[31merror[0m] [0m[0m[Error] C:\Users\ahmed\Desktop\test\dlp-test\app\views\all.scala.html:3[0m
+[0m[[0m[31merror[0m] [0m[0m<input type="submit" onclick="location.href='/all/@!(showOneImage)';" : Invalid '@' symbol[0m
