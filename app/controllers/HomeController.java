@@ -16,7 +16,6 @@ import com.typesafe.config.Config;
 
 import models.Image;
 import play.cache.SyncCacheApi;
-import play.libs.ws.WSClient;
 import play.mvc.Controller;
 import play.mvc.Result;
 import services.ContentAPIService;
@@ -37,7 +36,7 @@ public class HomeController extends Controller {
 
 	private final Config config;
 	private final SyncCacheApi cache;
-	private final ContentAPIService service ;
+	private final ContentAPIService service;
 
 	private JsonNode imagesAsJson;
 	private ObjectMapper objectMapper = new ObjectMapper();
@@ -47,10 +46,10 @@ public class HomeController extends Controller {
 	private Logger logger = Logger.getLogger("play");
 
 	@Inject
-	public HomeController(Config config, SyncCacheApi cache , ContentAPIService service) {
+	public HomeController(Config config, SyncCacheApi cache, ContentAPIService service) {
 		this.config = config;
 		this.cache = cache;
-		this.service = service ; 
+		this.service = service;
 	}
 
 	/**
@@ -65,9 +64,10 @@ public class HomeController extends Controller {
 	}
 
 	/**
-	 * This is where the test will be coded for the twirl
+	 * This is where the test will be coded for the twirl check if the image exist
+	 * in the cache , if not run the service
 	 * 
-	 * @return CompletionStage<Result>
+	 * @return CompletionStage<Result> ----- Route : /test
 	 */
 
 	public CompletionStage<Result> test() {
@@ -86,10 +86,14 @@ public class HomeController extends Controller {
 			return this.service.getOneImage()
 
 					.thenApply(file -> {
+						// Get the ID from response header 'Location'
+						// use the AppUtils.getIdFrom(Location) to extract the ID from the header
 						String Location = file.getAllHeaders().get("Location").get(0);
-						System.out.println(AppUtils.getIdFrom(Location));
+						this.logger.info("The id :" + AppUtils.getIdFrom(Location));
+
 						this.cache.set(IMAGE_CACHE_KEY, AppUtils.getIdFrom(Location),
 								this.config.getInt(IMAGE_CACHE_TTL));
+						// render the HTML
 						return ok(views.html.image.render(config.getString(RANDOM_IMAGE_URL) + Location));
 					});
 		}
@@ -98,7 +102,7 @@ public class HomeController extends Controller {
 	/**
 	 * This is where the multiple Image test will be coded
 	 * 
-	 * @return CompletionStage<Result>
+	 * @return CompletionStage<Result> ----- Route : /testMultiple
 	 */
 	public CompletionStage<Result> testMultiple() throws JsonProcessingException {
 		this.logger.info("Getting Multiple Images ........");
@@ -107,19 +111,28 @@ public class HomeController extends Controller {
 			this.imagesAsJson = files.asJson();
 
 			try {
-
+				// mapping the result from JSON to JAVA
 				this.images = this.objectMapper.treeToValue(imagesAsJson, Image[].class);
 				Arrays.stream(this.images).filter(img -> Integer.parseInt(img.getId()) % 2 == 0)
 						.map(image -> image.getDownload_url()).forEach(imageUrl -> this.listOfUrls.add(imageUrl));
 			} catch (JsonProcessingException e) {
 				e.printStackTrace();
 			}
+			// render HTML
 			return ok(views.html.images.render(this.listOfUrls));
 		});
 	}
 
+	/**
+	 * @param showOneImage used to test if the user want to show one or multiple
+	 *                     images
+	 * @return CompletionStage<Result> ----- Route : /all/
+	 * @throws JsonProcessingException
+	 */
 	public CompletionStage<Result> allInOnView(Boolean showOneImage) throws JsonProcessingException {
 		this.logger.info("Getting Either One Image Or Multiple Images ........");
+		// treat the case of one image
+		this.logger.info("Case One Image  ........");
 
 		if (showOneImage == true) {
 
@@ -138,14 +151,18 @@ public class HomeController extends Controller {
 
 						.thenApply(file -> {
 							String Location = file.getAllHeaders().get("Location").get(0);
-							System.out.println(AppUtils.getIdFrom(Location));
+							this.logger.info("The id :" + AppUtils.getIdFrom(Location));
+
 							this.cache.set(IMAGE_CACHE_KEY, AppUtils.getIdFrom(Location),
 									this.config.getInt(IMAGE_CACHE_TTL));
 							return ok(views.html.all.render(config.getString(RANDOM_IMAGE_URL) + Location,
 									new ArrayList<String>(), showOneImage));
 						});
 			}
+
+			// treat the case of multiple images
 		} else {
+			this.logger.info("Case Multiple Images  ........");
 
 			return this.service.getMultipleImages().thenApply(files -> {
 				this.imagesAsJson = files.asJson();
